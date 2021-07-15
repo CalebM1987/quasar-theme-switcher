@@ -1,30 +1,65 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated class="glossy bg-secondary">
+      <q-toolbar>
+        <q-btn
+          flat
+          dense
+          round
+          @click="leftDrawerOpen = !leftDrawerOpen"
+          aria-label="Menu"
+          icon="menu"
+        />
+
+        <q-toolbar-title>
+          Quasar Theme Switcher
+        </q-toolbar-title>
+
+        <div>Quasar v{{ $q.version }}</div>
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      class="bg-grey-2"
+    >
+      <sidebar />
+      
+    </q-drawer>
+
+    <q-page-container>
+      <Home />
+    </q-page-container>
+  </q-layout>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { ref, onMounted } from 'vue'
+import Home from '@/views/Home.vue'
+import Sidebar from '@/components/Sidebar'
+import { appTheme, appTextSize } from '@/modules/state'
+import { setTheme, setTextSize } from '@/modules/utils'
 
-#nav {
-  padding: 30px;
+export default {
+  name: 'LayoutDefault',
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  components: {
+    Home,
+    Sidebar,
+  },
 
-    &.router-link-exact-active {
-      color: #42b983;
+  setup () {
+
+    onMounted(()=> {
+      setTheme(appTheme)
+      setTextSize(appTextSize)
+    })
+
+    return {
+      leftDrawerOpen: ref(false)
     }
   }
 }
-</style>
+</script>
